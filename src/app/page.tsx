@@ -9,7 +9,6 @@ export default function Home() {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col items-center">
-            {/* En-tête */}
             <header className="w-full max-w-6xl px-4 py-6">
                 <h1 className="text-5xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
                     Daems_ Twitch
@@ -19,7 +18,6 @@ export default function Home() {
                 </p>
             </header>
 
-            {/* Lecteur Twitch */}
             <section className="w-full max-w-4xl px-4 my-8">
                 <div className="relative rounded-lg shadow-2xl overflow-hidden border-2 border-purple-500">
                     <iframe
@@ -29,11 +27,10 @@ export default function Home() {
                         allowFullScreen
                         className="aspect-video"
                     ></iframe>
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-600"></div>
                 </div>
             </section>
 
-            {/* Planning des matchs */}
             <section className="w-full max-w-4xl px-4 mb-12">
                 <h2 className="text-3xl font-bold mb-6 text-center text-purple-300">
                     Planning des Matchs (League of Legends)
@@ -54,7 +51,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Pied de page */}
             <footer className="w-full py-6 bg-gray-900 text-center">
                 <p className="text-gray-400">
                     Suivez <a href="https://twitch.tv/daems_" className="text-purple-400 hover:underline">Daems_</a> sur Twitch pour ne rien manquer !
