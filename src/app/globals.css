@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Style personnalisé pour les iframes */
+iframe {
+    border: none;
+}
