@@ -14,7 +14,7 @@ export default function Home() {
             {/* Lecteur Twitch via iframe */}
             <div className="w-full max-w-4xl mb-8">
                 <iframe
-                    src="https://player.twitch.tv/?channel=daems_&parent=localhost"
+                    src="https://player.twitch.tv/?channel=daems_&parent=daems-app.vercel.app"
                     height="480"
                     width="100%"
                     allowFullScreen

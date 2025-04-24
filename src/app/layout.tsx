@@ -12,6 +12,12 @@ export default function RootLayout({
 }) {
     return (
         <html lang="fr">
+            <head>
+                <meta
+                    httpEquiv="Content-Security-Policy"
+                    content="frame-ancestors 'self' https://player.twitch.tv; connect-src 'self' https://player.twitch.tv; frame-src 'self' https://player.twitch.tv;"
+                />
+            </head>
             <body>{children}</body>
         </html>
     );
