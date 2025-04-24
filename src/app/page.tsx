@@ -1,7 +1,5 @@
 "use client";
 
-import { TwitchEmbed } from "react-twitch-embed";
-
 export default function Home() {
     const schedule = [
         { day: "Lundi", match: "GLX vs Stonks", time: "18h" },
@@ -13,16 +11,14 @@ export default function Home() {
         <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-4">
             <h1 className="text-4xl font-bold mb-8">Bienvenue sur le site de Daems_</h1>
 
-            {/* Lecteur Twitch */}
+            {/* Lecteur Twitch via iframe */}
             <div className="w-full max-w-4xl mb-8">
-                <TwitchEmbed
-                    channel="daems_"
-                    id="twitch-embed"
-                    theme="dark"
-                    muted={false}
-                    withChat
-                    parent={["localhost"]}
-                />
+                <iframe
+                    src="https://player.twitch.tv/?channel=daems_&parent=localhost"
+                    height="480"
+                    width="100%"
+                    allowFullScreen
+                ></iframe>
             </div>
 
             {/* Planning des matchs */}
