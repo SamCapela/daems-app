@@ -1,4 +1,5 @@
-import { TwitchClip } from "@/app/types/TwitchClip"; // We'll define this type next
+import Link from 'next/link';
+import { TwitchClip } from '@/app/types/TwitchClip';
 
 export default async function Clips() {
     // Load environment variables
@@ -15,7 +16,7 @@ export default async function Clips() {
         `https://api.twitch.tv/helix/clips?broadcaster_id=441069979&started_at=${startedAtISO}`,
         {
             headers: {
-                "Client-Id": TWITCH_CLIENT_ID!,
+                'Client-Id': TWITCH_CLIENT_ID!,
                 Authorization: `Bearer ${TWITCH_ACCESS_TOKEN}`,
             },
         }
@@ -37,12 +38,12 @@ export default async function Clips() {
                     Les meilleurs clips de la semaine, triés par popularité !
                 </p>
                 <nav className="mt-4 text-center">
-                    <a href="/" className="text-purple-400 hover:underline mx-4">
+                    <Link href="/" className="text-purple-400 hover:underline mx-4">
                         Accueil
-                    </a>
-                    <a href="/clips" className="text-purple-400 hover:underline mx-4">
+                    </Link>
+                    <Link href="/clips" className="text-purple-400 hover:underline mx-4">
                         Clips
-                    </a>
+                    </Link>
                 </nav>
             </header>
 
@@ -75,10 +76,10 @@ export default async function Clips() {
 
             <footer className="w-full py-6 bg-gray-900 text-center">
                 <p className="text-gray-400">
-                    Suivez{" "}
+                    Suivez{' '}
                     <a href="https://twitch.tv/daems_" className="text-purple-400 hover:underline">
                         Daems_
-                    </a>{" "}
+                    </a>{' '}
                     sur Twitch pour ne rien manquer !
                 </p>
             </footer>
