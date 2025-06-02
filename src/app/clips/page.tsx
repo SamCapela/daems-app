@@ -6,7 +6,7 @@ export default async function Clips() {
     const TWITCH_ACCESS_TOKEN = process.env.TWITCH_ACCESS_TOKEN;
 
     const startedAt = new Date();
-    startedAt.setDate(startedAt.getDate() - 30); // Using 30 days as per previous fix
+    startedAt.setDate(startedAt.getDate() - 30);
     const startedAtISO = startedAt.toISOString().replace(/.\d+Z$/g, 'Z');
 
     const clipsResponse = await fetch(
@@ -25,12 +25,6 @@ export default async function Clips() {
     const clips: TwitchClip[] = clipsData.data?.sort(
         (a: TwitchClip, b: TwitchClip) => b.view_count - a.view_count
     ) || [];
-
-    // Dynamically determine parent domains based on environment
-    const isLocalhost = process.env.NODE_ENV === 'development';
-    const parentDomains = isLocalhost
-        ? ['localhost']
-        : ['daems-app.vercel.app']; // Add custom domain if applicable, e.g., 'daems-twitch-site.com'
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col items-center">
@@ -62,15 +56,15 @@ export default async function Clips() {
                                 <h3 className="text-lg font-semibold text-white">{clip.title}</h3>
                                 <p className="text-gray-400 text-sm mt-1">{clip.view_count} vues</p>
                                 <div className="mt-2">
-                                    <iframe
-                                        src={`https://clips.twitch.tv/embed?clip=${clip.id}&${parentDomains
-                                            .map((domain) => `parent=${domain}`)
-                                            .join('&')}`}
-                                        height="200"
-                                        width="100%"
-                                        allowFullScreen
-                                        className="rounded-md"
-                                    ></iframe>
+                                    {/* Fallback to a clickable link instead of iframe */}
+                                    <a
+                                        href={`https://clips.twitch.tv/${clip.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-purple-400 hover:underline"
+                                    >
+                                        Regarder le clip sur Twitch
+                                    </a>
                                 </div>
                             </div>
                         ))
