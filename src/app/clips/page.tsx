@@ -6,7 +6,7 @@ export default async function Clips() {
     const TWITCH_ACCESS_TOKEN = process.env.TWITCH_ACCESS_TOKEN;
 
     const startedAt = new Date();
-    startedAt.setDate(startedAt.getDate() - 30); // 30 jours pour tester
+    startedAt.setDate(startedAt.getDate() - 30); // Using 30 days as per previous fix
     const startedAtISO = startedAt.toISOString().replace(/.\d+Z$/g, 'Z');
 
     const clipsResponse = await fetch(
@@ -26,11 +26,11 @@ export default async function Clips() {
         (a: TwitchClip, b: TwitchClip) => b.view_count - a.view_count
     ) || [];
 
-    // Déterminer le domaine parent dynamiquement
+    // Dynamically determine parent domains based on environment
     const isLocalhost = process.env.NODE_ENV === 'development';
     const parentDomains = isLocalhost
         ? ['localhost']
-        : ['daems-app.vercel.app']; // Ajoute ton domaine personnalisé si applicable
+        : ['daems-app.vercel.app']; // Add custom domain if applicable, e.g., 'daems-twitch-site.com'
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col items-center">
