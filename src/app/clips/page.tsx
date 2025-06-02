@@ -2,16 +2,13 @@ import Link from 'next/link';
 import { TwitchClip } from '@/app/types/TwitchClip';
 
 export default async function Clips() {
-    // Load environment variables
     const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
     const TWITCH_ACCESS_TOKEN = process.env.TWITCH_ACCESS_TOKEN;
 
-    // Calculate the start date (7 days ago) for fetching clips
     const startedAt = new Date();
-    startedAt.setDate(startedAt.getDate() - 30); // Change to 30 days
-    const startedAtISO = startedAt.toISOString();
+    startedAt.setDate(startedAt.getDate() - 30); // 30 jours pour tester
+    const startedAtISO = startedAt.toISOString().replace(/.\d+Z$/g, 'Z');
 
-    // Fetch clips for Daems (user ID: 441069979) from the past week
     const clipsResponse = await fetch(
         `https://api.twitch.tv/helix/clips?broadcaster_id=441069979&started_at=${startedAtISO}`,
         {
@@ -22,11 +19,18 @@ export default async function Clips() {
         }
     );
     const clipsData = await clipsResponse.json();
+    console.log('API response status:', clipsResponse.status, clipsResponse.statusText);
+    console.log('Clips API response:', clipsData);
 
-    // Sort clips by view count (descending)
     const clips: TwitchClip[] = clipsData.data?.sort(
         (a: TwitchClip, b: TwitchClip) => b.view_count - a.view_count
     ) || [];
+
+    // Déterminer le domaine parent dynamiquement
+    const isLocalhost = process.env.NODE_ENV === 'development';
+    const parentDomains = isLocalhost
+        ? ['localhost']
+        : ['daems-app.vercel.app']; // Ajoute ton domaine personnalisé si applicable
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col items-center">
@@ -59,7 +63,9 @@ export default async function Clips() {
                                 <p className="text-gray-400 text-sm mt-1">{clip.view_count} vues</p>
                                 <div className="mt-2">
                                     <iframe
-                                        src={`https://clips.twitch.tv/embed?clip=${clip.id}&parent=daems-app.vercel.app`}
+                                        src={`https://clips.twitch.tv/embed?clip=${clip.id}&${parentDomains
+                                            .map((domain) => `parent=${domain}`)
+                                            .join('&')}`}
                                         height="200"
                                         width="100%"
                                         allowFullScreen
