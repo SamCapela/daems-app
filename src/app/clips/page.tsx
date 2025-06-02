@@ -6,7 +6,7 @@ export default async function Clips() {
     const TWITCH_ACCESS_TOKEN = process.env.TWITCH_ACCESS_TOKEN;
 
     const startedAt = new Date();
-    startedAt.setDate(startedAt.getDate() - 30);
+    startedAt.setDate(startedAt.getDate());
     const startedAtISO = startedAt.toISOString().replace(/.\d+Z$/g, 'Z');
 
     const clipsResponse = await fetch(
