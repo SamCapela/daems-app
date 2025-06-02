@@ -1,5 +1,7 @@
 "use client";
 
+import Link from 'next/link';
+
 export default function Home() {
     const schedule = [
         { day: "Lundi", match: "GLX vs Stonks", time: "18h" },
@@ -17,12 +19,12 @@ export default function Home() {
                     Rejoignez Daems_ pour des streams épiques et des matchs LoL explosifs !
                 </p>
                 <nav className="mt-4 text-center">
-                    <a href="/" className="text-purple-400 hover:underline mx-4">
+                    <Link href="/" className="text-purple-400 hover:underline mx-4">
                         Accueil
-                    </a>
-                    <a href="/clips" className="text-purple-400 hover:underline mx-4">
+                    </Link>
+                    <Link href="/clips" className="text-purple-400 hover:underline mx-4">
                         Clips
-                    </a>
+                    </Link>
                 </nav>
             </header>
 
@@ -61,7 +63,11 @@ export default function Home() {
 
             <footer className="w-full py-6 bg-gray-900 text-center">
                 <p className="text-gray-400">
-                    Suivez <a href="https://twitch.tv/daems_" className="text-purple-400 hover:underline">Daems_</a> sur Twitch pour ne rien manquer !
+                    Suivez{' '}
+                    <a href="https://twitch.tv/daems_" className="text-purple-400 hover:underline">
+                        Daems_
+                    </a>{' '}
+                    sur Twitch pour ne rien manquer !
                 </p>
             </footer>
         </div>
