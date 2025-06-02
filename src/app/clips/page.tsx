@@ -8,7 +8,7 @@ export default async function Clips() {
 
     // Calculate the start date (7 days ago) for fetching clips
     const startedAt = new Date();
-    startedAt.setDate(startedAt.getDate() - 7);
+    startedAt.setDate(startedAt.getDate() - 30); // Change to 30 days
     const startedAtISO = startedAt.toISOString();
 
     // Fetch clips for Daems (user ID: 441069979) from the past week
