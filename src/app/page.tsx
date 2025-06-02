@@ -16,6 +16,14 @@ export default function Home() {
                 <p className="text-center text-lg mt-2 text-gray-300">
                     Rejoignez Daems_ pour des streams épiques et des matchs LoL explosifs !
                 </p>
+                <nav className="mt-4 text-center">
+                    <a href="/" className="text-purple-400 hover:underline mx-4">
+                        Accueil
+                    </a>
+                    <a href="/clips" className="text-purple-400 hover:underline mx-4">
+                        Clips
+                    </a>
+                </nav>
             </header>
 
             <section className="w-full max-w-4xl px-4 my-8">
