@@ -4,12 +4,8 @@
 import Link from 'next/link';
 import { TwitchClip } from '@/app/types/TwitchClip';
 
-interface ClipWithVideoUrl extends TwitchClip {
-    videoUrl: string | null;
-}
-
 interface ClipsClientProps {
-    clips: ClipWithVideoUrl[];
+    clips: TwitchClip[];
 }
 
 export default function ClipsClient({ clips }: ClipsClientProps) {
