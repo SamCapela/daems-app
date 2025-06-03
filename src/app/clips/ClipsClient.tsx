@@ -11,13 +11,13 @@ interface ClipsClientProps {
 }
 
 export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
-    // État pour suivre l'index du clip actuellement affiché
     const [currentClipIndex, setCurrentClipIndex] = useState(0);
+    const parentDomains = isProduction
+        ? ['daems-app.vercel.app', 'www.daems-app.vercel.app']
+        : ['local.daems-app.com'];
 
-    // Domaine parent pour l'iframe
-    const parentDomain = isProduction ? 'daems-app.vercel.app' : 'local.daems-app.com';
+    const parentQuery = parentDomains.map((domain) => `parent=${domain}`).join('&');
 
-    // Fonctions pour naviguer entre les clips
     const handlePrevious = () => {
         setCurrentClipIndex((prevIndex) =>
             prevIndex > 0 ? prevIndex - 1 : clips.length - 1
@@ -30,7 +30,6 @@ export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
         );
     };
 
-    // Clip actuellement affiché
     const currentClip = clips[currentClipIndex];
 
     return (
@@ -55,17 +54,15 @@ export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
             <section className="w-full max-w-4xl px-4 my-8 flex flex-col items-center">
                 {clips.length > 0 ? (
                     <div className="w-full flex flex-col items-center">
-                        {/* Informations sur le clip */}
                         <h3 className="text-lg font-semibold text-white mb-2">{currentClip.title}</h3>
                         <p className="text-gray-400 text-sm mb-1">{currentClip.view_count} vues</p>
                         <p className="text-gray-400 text-sm mb-4">
                             {new Date(currentClip.created_at).toLocaleDateString()}
                         </p>
 
-                        {/* Iframe pour le clip */}
                         <div className="relative w-full max-w-[640px] h-[360px] mb-4">
                             <iframe
-                                src={`https://clips.twitch.tv/embed?clip=${currentClip.id}&parent=${parentDomain}`}
+                                src={`https://clips.twitch.tv/embed?clip=${currentClip.id}&${parentQuery}`}
                                 height="360"
                                 width="640"
                                 allowFullScreen
@@ -73,7 +70,6 @@ export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
                             ></iframe>
                         </div>
 
-                        {/* Boutons de navigation */}
                         <div className="flex justify-center space-x-4">
                             <button
                                 onClick={handlePrevious}
