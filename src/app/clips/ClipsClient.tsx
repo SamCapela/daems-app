@@ -4,14 +4,15 @@
 import Link from 'next/link';
 import { TwitchClip } from '@/app/types/TwitchClip';
 
-interface ClipsClientProps {
-    clips: TwitchClip[];
-    isProduction: boolean;
+interface ClipWithVideoUrl extends TwitchClip {
+    videoUrl: string | null;
 }
 
-export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
-    const parentDomain = isProduction ? 'daems-app.vercel.app' : 'localhost';
+interface ClipsClientProps {
+    clips: ClipWithVideoUrl[];
+}
 
+export default function ClipsClient({ clips }: ClipsClientProps) {
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col items-center">
             <header className="w-full max-w-6xl px-4 py-6">
@@ -43,13 +44,22 @@ export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
                                 <p className="text-gray-400 text-sm mt-1">{clip.view_count} vues</p>
                                 <p className="text-gray-400 text-sm">{new Date(clip.created_at).toLocaleDateString()}</p>
                                 <div className="mt-2">
-                                    <iframe
-                                        src={`https://clips.twitch.tv/embed?clip=${clip.id}&parent=${parentDomain}`}
-                                        height="200"
-                                        width="100%"
-                                        allowFullScreen
-                                        className="rounded-md"
-                                    ></iframe>
+                                    {clip.videoUrl ? (
+                                        <video
+                                            src={clip.videoUrl}
+                                            controls
+                                            autoPlay={false}
+                                            muted
+                                            width="100%"
+                                            height="200"
+                                            className="rounded-md"
+                                            onError={(e) => console.error(`Erreur vidéo pour le clip ${clip.id}:`, e)}
+                                        >
+                                            Votre navigateur ne supporte pas la balise vidéo.
+                                        </video>
+                                    ) : (
+                                        <p className="text-gray-400">Vidéo indisponible.</p>
+                                    )}
                                 </div>
                             </div>
                         ))

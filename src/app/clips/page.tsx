@@ -7,6 +7,10 @@ interface ClipsResponse {
     pagination?: { cursor?: string };
 }
 
+interface ClipWithVideoUrl extends TwitchClip {
+    videoUrl: string | null;
+}
+
 export default async function Clips() {
     const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
     const TWITCH_ACCESS_TOKEN = process.env.TWITCH_ACCESS_TOKEN;
@@ -46,13 +50,19 @@ export default async function Clips() {
         return newClips;
     };
 
-    const allClips = await fetchAllClips(); // Now 'allClips' can be 'const'
+    const allClips = await fetchAllClips();
     console.log(`Total clips fetched: ${allClips.length}`);
 
     const sortedClips = [...allClips].sort((a, b) => b.view_count - a.view_count);
 
-    // Pass a flag to indicate if we're in production
-    const isProduction = process.env.NODE_ENV === 'production';
+    // Derive video URLs for each clip
+    const clipsWithVideoUrls: ClipWithVideoUrl[] = sortedClips.map((clip) => {
+        const videoUrl = clip.thumbnail_url
+            ? clip.thumbnail_url.replace(/-preview-\d+x\d+\.jpg$/, '.mp4')
+            : null;
+        console.log(`Derived video URL for clip ${clip.id}: ${videoUrl}`);
+        return { ...clip, videoUrl };
+    });
 
-    return <ClipsClient clips={sortedClips} isProduction={isProduction} />;
+    return <ClipsClient clips={clipsWithVideoUrls} />;
 }
