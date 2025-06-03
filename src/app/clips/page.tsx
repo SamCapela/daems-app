@@ -6,7 +6,7 @@ export default async function Clips() {
     const TWITCH_ACCESS_TOKEN = process.env.TWITCH_ACCESS_TOKEN;
 
     const startedAt = new Date();
-    startedAt.setDate(startedAt.getDate() -30);
+    startedAt.setDate(startedAt.getDate() - 30);
     const startedAtISO = startedAt.toISOString().replace(/.\d+Z$/g, 'Z');
 
     const clipsResponse = await fetch(
@@ -25,6 +25,11 @@ export default async function Clips() {
     const clips: TwitchClip[] = clipsData.data?.sort(
         (a: TwitchClip, b: TwitchClip) => b.view_count - a.view_count
     ) || [];
+
+    const isLocalhost = process.env.NODE_ENV === 'development';
+    const parentDomains = isLocalhost
+        ? ['localhost']
+        : ['daems-app.vercel.app', 'www.daems-app.vercel.app', 'vercel.app']; // Added broader domain
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col items-center">
@@ -48,26 +53,31 @@ export default async function Clips() {
             <section className="w-full max-w-4xl px-4 my-8">
                 <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                     {clips.length > 0 ? (
-                        clips.map((clip) => (
-                            <div
-                                key={clip.id}
-                                className="bg-gray-800 p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-purple-500"
-                            >
-                                <h3 className="text-lg font-semibold text-white">{clip.title}</h3>
-                                <p className="text-gray-400 text-sm mt-1">{clip.view_count} vues</p>
-                                <div className="mt-2">
-                                    {/* Fallback to a clickable link instead of iframe */}
-                                    <a
-                                        href={`https://clips.twitch.tv/${clip.id}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-purple-400 hover:underline"
-                                    >
-                                        Regarder le clip sur Twitch
-                                    </a>
+                        clips.map((clip) => {
+                            const iframeSrc = `https://clips.twitch.tv/embed?clip=${clip.id}&${parentDomains
+                                .map((domain) => `parent=${domain}`)
+                                .join('&')}`;
+                            console.log(`Iframe src for clip ${clip.id}: ${iframeSrc}`);
+                            return (
+                                <div
+                                    key={clip.id}
+                                    className="bg-gray-800 p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-purple-500"
+                                >
+                                    <h3 className="text-lg font-semibold text-white">{clip.title}</h3>
+                                    <p className="text-gray-400 text-sm mt-1">{clip.view_count} vues</p>
+                                    <div className="mt-2">
+                                        <iframe
+                                            src={iframeSrc}
+                                            height="200"
+                                            width="100%"
+                                            allowFullScreen
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            className="rounded-md"
+                                        ></iframe>
+                                    </div>
                                 </div>
-                            </div>
-                        ))
+                            );
+                        })
                     ) : (
                         <p className="text-gray-400">Aucun clip trouvé cette semaine.</p>
                     )}
