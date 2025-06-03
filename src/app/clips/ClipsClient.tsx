@@ -12,11 +12,7 @@ interface ClipsClientProps {
 
 export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
     const [currentClipIndex, setCurrentClipIndex] = useState(0);
-    const parentDomains = isProduction
-        ? ['daems-app.vercel.app', 'www.daems-app.vercel.app']
-        : ['local.daems-app.com'];
-
-    const parentQuery = parentDomains.map((domain) => `parent=${domain}`).join('&');
+    const parentDomain = isProduction ? 'daems-app.vercel.app' : 'local.daems-app.com';
 
     const handlePrevious = () => {
         setCurrentClipIndex((prevIndex) =>
@@ -62,7 +58,7 @@ export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
 
                         <div className="relative w-full max-w-[640px] h-[360px] mb-4">
                             <iframe
-                                src={`https://clips.twitch.tv/embed?clip=${currentClip.id}&${parentQuery}`}
+                                src={`https://clips.twitch.tv/embed?clip=${currentClip.id}&parent=${parentDomain}&autoplay=false&muted=true`}
                                 height="360"
                                 width="640"
                                 allowFullScreen
