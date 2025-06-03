@@ -47,6 +47,6 @@ export default async function Clips() {
     // Sort clips by view count (descending)
     const sortedClips = allClips.sort((a, b) => b.view_count - a.view_count);
 
-    // We’ll remove videoUrl derivation since we’re using iframes now
+    // Weâ€™ll remove videoUrl derivation since weâ€™re using iframes now
     return <ClipsClient clips={sortedClips} />;
 }
