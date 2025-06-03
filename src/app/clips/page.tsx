@@ -15,11 +15,8 @@ export default async function Clips() {
     startedAt.setDate(startedAt.getDate() - 30);
     const startedAtISO = startedAt.toISOString().replace(/.\d+Z$/g, 'Z');
 
-    let allClips: TwitchClip[] = [];
-    let cursor: string | undefined = undefined;
-
-    // Paginate through all clips
-    do {
+    // Fetch all clips via pagination
+    const fetchClipsPage = async (cursor?: string): Promise<ClipsResponse> => {
         const url = new URL('https://api.twitch.tv/helix/clips');
         url.searchParams.append('broadcaster_id', '441069979');
         url.searchParams.append('started_at', startedAtISO);
@@ -36,14 +33,20 @@ export default async function Clips() {
         const clipsData: ClipsResponse = await clipsResponse.json();
         console.log('API response status:', clipsResponse.status, clipsResponse.statusText);
         console.log('Clips API response:', clipsData);
+        return clipsData;
+    };
 
-        if (clipsData.data) {
-            allClips.push(...clipsData.data);
+    // Collect all clips recursively
+    const fetchAllClips = async (cursor?: string, accumulatedClips: TwitchClip[] = []): Promise<TwitchClip[]> => {
+        const { data, pagination } = await fetchClipsPage(cursor);
+        const newClips = [...accumulatedClips, ...(data || [])];
+        if (pagination?.cursor) {
+            return fetchAllClips(pagination.cursor, newClips);
         }
+        return newClips;
+    };
 
-        cursor = clipsData.pagination?.cursor;
-    } while (cursor);
-
+    const allClips = await fetchAllClips(); // Now 'allClips' can be 'const'
     console.log(`Total clips fetched: ${allClips.length}`);
 
     const sortedClips = [...allClips].sort((a, b) => b.view_count - a.view_count);
