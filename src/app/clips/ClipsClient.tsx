@@ -1,5 +1,6 @@
 // src/app/clips/ClipsClient.tsx
 'use client';
+
 import Link from 'next/link';
 import { TwitchClip } from '@/app/types/TwitchClip';
 
@@ -12,8 +13,6 @@ interface ClipsClientProps {
 }
 
 export default function ClipsClient({ clips }: ClipsClientProps) {
-    const testClipId = clips[0]?.id || "PlaceholderClipId"; // Replace with actual ID after getting logs
-
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col items-center">
             <header className="w-full max-w-6xl px-4 py-6">
@@ -35,19 +34,28 @@ export default function ClipsClient({ clips }: ClipsClientProps) {
 
             <section className="w-full max-w-4xl px-4 my-8">
                 <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    <div className="bg-gray-800 p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-purple-500">
-                        <h3 className="text-lg font-semibold text-white">Test Clip</h3>
-                        <p className="text-gray-400 text-sm mt-1">Debugging</p>
-                        <div className="mt-2">
-                            <iframe
-                                src={`https://clips.twitch.tv/embed?clip=${testClipId}&parent=daems-app.vercel.app&parent=www.daems-app.vercel.app&parent=localhost`}
-                                height="200"
-                                width="100%"
-                                allowFullScreen
-                                className="rounded-md"
-                            ></iframe>
-                        </div>
-                    </div>
+                    {clips.length > 0 ? (
+                        clips.map((clip) => (
+                            <div
+                                key={clip.id}
+                                className="bg-gray-800 p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-purple-500"
+                            >
+                                <h3 className="text-lg font-semibold text-white">{clip.title}</h3>
+                                <p className="text-gray-400 text-sm mt-1">{clip.view_count} vues</p>
+                                <div className="mt-2">
+                                    <iframe
+                                        src={`https://clips.twitch.tv/embed?clip=${clip.id}&parent=daems-app.vercel.app&parent=localhost`}
+                                        height="200"
+                                        width="100%"
+                                        allowFullScreen
+                                        className="rounded-md"
+                                    ></iframe>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-gray-400">Aucun clip trouvé cette semaine.</p>
+                    )}
                 </div>
             </section>
 

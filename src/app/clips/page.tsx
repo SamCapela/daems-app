@@ -1,5 +1,4 @@
 // src/app/clips/page.tsx
-import Link from 'next/link';
 import { TwitchClip } from '@/app/types/TwitchClip';
 import ClipsClient from './ClipsClient';
 
