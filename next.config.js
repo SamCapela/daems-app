@@ -1,13 +1,22 @@
+// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    headers: async () => {
+    async headers() {
         return [
             {
-                source: '/(.*)',
+                source: "/(.*)", // Appliquer à toutes les routes
                 headers: [
                     {
-                        key: 'Content-Security-Policy',
-                        value: "default-src 'self'; frame-src 'self' https://clips.twitch.tv; script-src 'self' https://clips.twitch.tv https://static.twitchcdn.net 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://clips.twitch.tv https://static.twitchcdn.net 'unsafe-inline'; img-src 'self' https://clips-media-assets2.twitch.tv data:; connect-src 'self' https://api.twitch.tv; worker-src 'self';",
+                        key: "Content-Security-Policy",
+                        value: `
+              default-src 'self';
+              script-src 'self' 'unsafe-inline' 'unsafe-eval';
+              style-src 'self' 'unsafe-inline';
+              img-src 'self' data: https:;
+              frame-src 'self' https://clips.twitch.tv;
+              connect-src 'self' https://api.twitch.tv https://gql.twitch.tv;
+              font-src 'self';
+            `.replace(/\s{2,}/g, ' ').trim(),
                     },
                 ],
             },
@@ -15,4 +24,4 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
