@@ -7,10 +7,6 @@ interface ClipsResponse {
     pagination?: { cursor?: string };
 }
 
-interface ClipWithVideoUrl extends TwitchClip {
-    videoUrl: string | null;
-}
-
 export default async function Clips() {
     const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
     const TWITCH_ACCESS_TOKEN = process.env.TWITCH_ACCESS_TOKEN;
@@ -24,7 +20,7 @@ export default async function Clips() {
         const url = new URL('https://api.twitch.tv/helix/clips');
         url.searchParams.append('broadcaster_id', '441069979');
         url.searchParams.append('started_at', startedAtISO);
-        url.searchParams.append('first', '100'); // Max per page
+        url.searchParams.append('first', '100');
         if (cursor) url.searchParams.append('after', cursor);
 
         const clipsResponse = await fetch(url.toString(), {
@@ -55,14 +51,7 @@ export default async function Clips() {
 
     const sortedClips = [...allClips].sort((a, b) => b.view_count - a.view_count);
 
-    // Derive video URLs for each clip
-    const clipsWithVideoUrls: ClipWithVideoUrl[] = sortedClips.map((clip) => {
-        const videoUrl = clip.thumbnail_url
-            ? clip.thumbnail_url.replace(/-preview-\d+x\d+\.jpg$/, '.mp4')
-            : null;
-        console.log(`Derived video URL for clip ${clip.id}: ${videoUrl}`);
-        return { ...clip, videoUrl };
-    });
+    const isProduction = process.env.NODE_ENV === 'production';
 
-    return <ClipsClient clips={clipsWithVideoUrls} />;
+    return <ClipsClient clips={sortedClips} isProduction={isProduction} />;
 }

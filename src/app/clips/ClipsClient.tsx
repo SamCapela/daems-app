@@ -1,18 +1,38 @@
 // src/app/clips/ClipsClient.tsx
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { TwitchClip } from '@/app/types/TwitchClip';
 
-interface ClipWithVideoUrl extends TwitchClip {
-    videoUrl: string | null;
-}
-
 interface ClipsClientProps {
-    clips: ClipWithVideoUrl[];
+    clips: TwitchClip[];
+    isProduction: boolean;
 }
 
-export default function ClipsClient({ clips }: ClipsClientProps) {
+export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
+    // État pour suivre l'index du clip actuellement affiché
+    const [currentClipIndex, setCurrentClipIndex] = useState(0);
+
+    // Domaine parent pour l'iframe
+    const parentDomain = isProduction ? 'daems-app.vercel.app' : 'local.daems-app.com';
+
+    // Fonctions pour naviguer entre les clips
+    const handlePrevious = () => {
+        setCurrentClipIndex((prevIndex) =>
+            prevIndex > 0 ? prevIndex - 1 : clips.length - 1
+        );
+    };
+
+    const handleNext = () => {
+        setCurrentClipIndex((prevIndex) =>
+            prevIndex < clips.length - 1 ? prevIndex + 1 : 0
+        );
+    };
+
+    // Clip actuellement affiché
+    const currentClip = clips[currentClipIndex];
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col items-center">
             <header className="w-full max-w-6xl px-4 py-6">
@@ -32,41 +52,51 @@ export default function ClipsClient({ clips }: ClipsClientProps) {
                 </nav>
             </header>
 
-            <section className="w-full max-w-4xl px-4 my-8">
-                <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    {clips.length > 0 ? (
-                        clips.map((clip) => (
-                            <div
-                                key={clip.id}
-                                className="bg-gray-800 p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-purple-500"
+            <section className="w-full max-w-4xl px-4 my-8 flex flex-col items-center">
+                {clips.length > 0 ? (
+                    <div className="w-full flex flex-col items-center">
+                        {/* Informations sur le clip */}
+                        <h3 className="text-lg font-semibold text-white mb-2">{currentClip.title}</h3>
+                        <p className="text-gray-400 text-sm mb-1">{currentClip.view_count} vues</p>
+                        <p className="text-gray-400 text-sm mb-4">
+                            {new Date(currentClip.created_at).toLocaleDateString()}
+                        </p>
+
+                        {/* Iframe pour le clip */}
+                        <div className="relative w-full max-w-[640px] h-[360px] mb-4">
+                            <iframe
+                                src={`https://clips.twitch.tv/embed?clip=${currentClip.id}&parent=${parentDomain}`}
+                                height="360"
+                                width="640"
+                                allowFullScreen
+                                className="rounded-md"
+                            ></iframe>
+                        </div>
+
+                        {/* Boutons de navigation */}
+                        <div className="flex justify-center space-x-4">
+                            <button
+                                onClick={handlePrevious}
+                                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200"
+                                aria-label="Clip précédent"
                             >
-                                <h3 className="text-lg font-semibold text-white">{clip.title}</h3>
-                                <p className="text-gray-400 text-sm mt-1">{clip.view_count} vues</p>
-                                <p className="text-gray-400 text-sm">{new Date(clip.created_at).toLocaleDateString()}</p>
-                                <div className="mt-2">
-                                    {clip.videoUrl ? (
-                                        <video
-                                            src={clip.videoUrl}
-                                            controls
-                                            autoPlay={false}
-                                            muted
-                                            width="100%"
-                                            height="200"
-                                            className="rounded-md"
-                                            onError={(e) => console.error(`Erreur vidéo pour le clip ${clip.id}:`, e)}
-                                        >
-                                            Votre navigateur ne supporte pas la balise vidéo.
-                                        </video>
-                                    ) : (
-                                        <p className="text-gray-400">Vidéo indisponible.</p>
-                                    )}
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-gray-400">Aucun clip trouvé pour le dernier mois.</p>
-                    )}
-                </div>
+                                ←
+                            </button>
+                            <span className="text-gray-400">
+                                Clip {currentClipIndex + 1} sur {clips.length}
+                            </span>
+                            <button
+                                onClick={handleNext}
+                                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200"
+                                aria-label="Clip suivant"
+                            >
+                                →
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <p className="text-gray-400">Aucun clip trouvé pour le dernier mois.</p>
+                )}
             </section>
 
             <footer className="w-full py-6 bg-gray-900 text-center">
