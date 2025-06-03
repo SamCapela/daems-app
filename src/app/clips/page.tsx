@@ -44,9 +44,12 @@ export default async function Clips() {
         cursor = clipsData.pagination?.cursor;
     } while (cursor);
 
-    // Sort clips by view count (descending)
-    const sortedClips = allClips.sort((a, b) => b.view_count - a.view_count);
+    console.log(`Total clips fetched: ${allClips.length}`);
 
-    // We’ll remove videoUrl derivation since we’re using iframes now
-    return <ClipsClient clips={sortedClips} />;
+    const sortedClips = [...allClips].sort((a, b) => b.view_count - a.view_count);
+
+    // Pass a flag to indicate if we're in production
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    return <ClipsClient clips={sortedClips} isProduction={isProduction} />;
 }

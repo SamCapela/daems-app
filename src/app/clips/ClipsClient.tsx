@@ -6,9 +6,12 @@ import { TwitchClip } from '@/app/types/TwitchClip';
 
 interface ClipsClientProps {
     clips: TwitchClip[];
+    isProduction: boolean;
 }
 
-export default function ClipsClient({ clips }: ClipsClientProps) {
+export default function ClipsClient({ clips, isProduction }: ClipsClientProps) {
+    const parentDomain = isProduction ? 'daems-app.vercel.app' : 'localhost';
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col items-center">
             <header className="w-full max-w-6xl px-4 py-6">
@@ -16,7 +19,7 @@ export default function ClipsClient({ clips }: ClipsClientProps) {
                     Clips de Daems_
                 </h1>
                 <p className="text-center text-lg mt-2 text-gray-300">
-                    Les meilleurs clips de la semaine, triés par popularité !
+                    Les meilleurs clips du dernier mois, triés par popularité !
                 </p>
                 <nav className="mt-4 text-center">
                     <Link href="/" className="text-purple-400 hover:underline mx-4">
@@ -38,9 +41,10 @@ export default function ClipsClient({ clips }: ClipsClientProps) {
                             >
                                 <h3 className="text-lg font-semibold text-white">{clip.title}</h3>
                                 <p className="text-gray-400 text-sm mt-1">{clip.view_count} vues</p>
+                                <p className="text-gray-400 text-sm">{new Date(clip.created_at).toLocaleDateString()}</p>
                                 <div className="mt-2">
                                     <iframe
-                                        src={`https://clips.twitch.tv/embed?clip=${clip.id}&parent=daems-app.vercel.app&parent=localhost`}
+                                        src={`https://clips.twitch.tv/embed?clip=${clip.id}&parent=${parentDomain}`}
                                         height="200"
                                         width="100%"
                                         allowFullScreen
@@ -50,7 +54,7 @@ export default function ClipsClient({ clips }: ClipsClientProps) {
                             </div>
                         ))
                     ) : (
-                        <p className="text-gray-400">Aucun clip trouvé cette semaine.</p>
+                        <p className="text-gray-400">Aucun clip trouvé pour le dernier mois.</p>
                     )}
                 </div>
             </section>
