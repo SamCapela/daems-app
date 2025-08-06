@@ -47,7 +47,7 @@ export default function ClipsClient({
                         key={clip.id}
                         className={`relative group cursor-pointer rounded-lg overflow-hidden shadow-lg transition-transform duration-300
                             ${animationTrigger ? 'clip-visible' : 'clip-hidden'}`}
-                        style={{ animationDelay: `${index * 110}ms` }}
+                        style={{ animationDelay: `${index * 222}ms` }}
                         onClick={() => setSelectedClip(clip)}
                     >
                         <img
@@ -109,7 +109,7 @@ export default function ClipsClient({
                     transform: translateY(10px);
                 }
                 .clip-visible {
-                    animation: clipFadeIn 0.3s forwards;
+                    animation: clipFadeIn 0.4s forwards;
                 }
                 @keyframes clipFadeIn {
                     to {
