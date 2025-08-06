@@ -37,10 +37,10 @@ export default function Home() {
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-600"></div>
                 </div>
 
-                {/* Chat Twitch */}
-                <div className="flex-1 max-w-[360px] rounded-lg shadow-2xl overflow-hidden border-2 border-pink-500">
+                {/* Chat Twitch with Scrollable Container and Dark Mode */}
+                <div className="flex-1 max-w-[360px] rounded-lg shadow-2xl overflow-auto border-2 border-pink-500" style={{ maxHeight: '480px' }}>
                     <iframe
-                        src="https://www.twitch.tv/embed/daems_/chat?parent=daems-app.vercel.app"
+                        src="https://www.twitch.tv/embed/daems_/chat?parent=daems-app.vercel.app&darkpopout=1"
                         height="480"
                         width="100%"
                         className="bg-black"
