@@ -1,3 +1,4 @@
+// src/app/page.tsx
 'use client';
 
 import Link from 'next/link';
@@ -27,7 +28,7 @@ export default function Home() {
                 {/* Lecteur Twitch */}
                 <div className="flex-1 max-w-[720px] rounded-lg shadow-2xl overflow-hidden border-2 border-purple-500 relative">
                     <iframe
-                        src="https://player.twitch.tv/?channel=daems_&parent=daems-app.vercel.app&parent=www.daems-app.vercel.app"
+                        src="https://player.twitch.tv/?channel=daems_&parent=daems-app.vercel.app"
                         height="480"
                         width="100%"
                         allowFullScreen
@@ -39,7 +40,7 @@ export default function Home() {
                 {/* Chat Twitch */}
                 <div className="flex-1 max-w-[360px] rounded-lg shadow-2xl overflow-hidden border-2 border-pink-500">
                     <iframe
-                        src="https://www.twitch.tv/embed/daems_/chat?parent=daems-app.vercel.app&parent=www.daems-app.vercel.app"
+                        src="https://www.twitch.tv/embed/daems_/chat?parent=daems-app.vercel.app"
                         height="480"
                         width="100%"
                         className="bg-black"
