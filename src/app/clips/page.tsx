@@ -10,92 +10,35 @@ export default function Clips() {
     const [sortType, setSortType] = useState<'views' | 'recent' | 'old'>('views');
     const [clips, setClips] = useState<TwitchClip[]>([]);
     const [loading, setLoading] = useState(false);
-
     const [currentPage, setCurrentPage] = useState(1);
-    const [cursorMap, setCursorMap] = useState<{ [page: number]: string | undefined }>({});
     const [hasMore, setHasMore] = useState(true);
-
-    const clipsPerPage = 15;
-
-    const TWITCH_CLIENT_ID = process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID;
-    const TWITCH_ACCESS_TOKEN = process.env.NEXT_PUBLIC_TWITCH_ACCESS_TOKEN;
 
     useEffect(() => {
         setCurrentPage(1);
-        setCursorMap({});
         fetchClips(1);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category, sortType]);
 
     const fetchClips = async (page: number) => {
-        if (!TWITCH_CLIENT_ID || !TWITCH_ACCESS_TOKEN) return;
-
         setLoading(true);
+        try {
+            const url = new URL('/api/clips', window.location.origin);
+            url.searchParams.append('category', category);
+            url.searchParams.append('sortType', sortType);
+            url.searchParams.append('page', page.toString());
 
-        const now = new Date();
-        const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        const oneMonthAgo = new Date(now.getTime() - 31 * 24 * 60 * 60 * 1000);
+            const response = await fetch(url, { cache: 'no-store' });
+            if (!response.ok) throw new Error('Failed to fetch clips');
+            const { clips: fetchedClips, hasMore: fetchedHasMore } = await response.json();
 
-        const url = new URL('https://api.twitch.tv/helix/clips');
-        url.searchParams.append('broadcaster_id', '441069979');
-        url.searchParams.append('first', clipsPerPage.toString());
-
-        if (category === 'week') {
-            url.searchParams.append('started_at', oneWeekAgo.toISOString());
-            url.searchParams.append('ended_at', now.toISOString());
-        } else if (category === 'month') {
-            url.searchParams.append('started_at', oneMonthAgo.toISOString());
-            url.searchParams.append('ended_at', now.toISOString());
-        }
-
-        // Ajout de la pagination uniquement si on a un curseur pour cette page
-        if (page > 1) {
-            const cursor = cursorMap[page];
-            if (cursor) {
-                url.searchParams.append('after', cursor);
-            }
-        }
-
-        const response = await fetch(url.toString(), {
-            headers: {
-                'Client-Id': TWITCH_CLIENT_ID,
-                Authorization: `Bearer ${TWITCH_ACCESS_TOKEN}`,
-            },
-            cache: 'no-store',
-        });
-
-        if (!response.ok) {
-            console.error('Erreur API Twitch');
-            setLoading(false);
-            return;
-        }
-
-        const json = await response.json();
-
-        // Tri
-        const sortFunctions = {
-            views: (a: TwitchClip, b: TwitchClip) => b.view_count - a.view_count,
-            recent: (a: TwitchClip, b: TwitchClip) =>
-                new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-            old: (a: TwitchClip, b: TwitchClip) =>
-                new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-        };
-
-        const sortedData = [...json.data].sort(sortFunctions[sortType]);
-        setClips(sortedData);
-
-        // Gestion des curseurs de pagination
-        if (json.pagination?.cursor) {
-            setCursorMap((prev) => ({
-                ...prev,
-                [page + 1]: json.pagination.cursor,
-            }));
-            setHasMore(true);
-        } else {
+            setClips(fetchedClips);
+            setHasMore(fetchedHasMore);
+        } catch (error) {
+            console.error('Error fetching clips:', error);
+            setClips([]);
             setHasMore(false);
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
 
     const handlePageChange = (newPage: number) => {
@@ -141,8 +84,8 @@ export default function Clips() {
                                 key={btn.key}
                                 onClick={() => setCategory(btn.key as 'week' | 'month' | 'global')}
                                 className={`px-6 py-2 rounded-lg font-semibold transition-colors ${category === btn.key
-                                        ? 'bg-purple-600 text-white'
-                                        : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                    ? 'bg-purple-600 text-white'
+                                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
                                     }`}
                             >
                                 {btn.label}
@@ -161,8 +104,8 @@ export default function Clips() {
                                 key={btn.key}
                                 onClick={() => setSortType(btn.key as 'views' | 'recent' | 'old')}
                                 className={`px-6 py-2 rounded-lg font-semibold transition-colors ${sortType === btn.key
-                                        ? 'bg-pink-600 text-white'
-                                        : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                    ? 'bg-pink-600 text-white'
+                                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
                                     }`}
                             >
                                 {btn.label}
