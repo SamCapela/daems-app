@@ -78,6 +78,18 @@ export default function ClipsClient({
                             <h4 className="text-white font-bold text-lg truncate">{clip.title}</h4>
                             <span className="text-gray-200 text-sm">{clip.view_count} vues</span>
                         </div>
+                        {/* Tooltip */}
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
+                            <div className="bg-gray-800 text-white text-sm rounded-lg shadow-xl p-3 border border-purple-500 max-w-xs
+                                bg-gradient-to-r from-purple-600/50 to-pink-600/50">
+                                <p className="font-bold truncate">{clip.title}</p>
+                                <p>Vues: {clip.view_count}</p>
+                                <p>Créateur: {clip.creator_name}</p>
+                                <p>Date: {new Date(clip.created_at).toLocaleDateString('fr-FR')}</p>
+                            </div>
+                            {/* Tooltip arrow */}
+                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-8 border-transparent border-t-purple-500"></div>
+                        </div>
                     </div>
                 ))}
             </div>
