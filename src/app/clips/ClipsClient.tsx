@@ -19,6 +19,14 @@ export default function ClipsClient({
     onPageChange,
 }: ClipsClientProps) {
     const [selectedClip, setSelectedClip] = useState<TwitchClip | null>(null);
+    const [animationTrigger, setAnimationTrigger] = useState(false);
+
+    useEffect(() => {
+        // Re-trigger animation à chaque changement de clips
+        setAnimationTrigger(false);
+        const timeout = setTimeout(() => setAnimationTrigger(true), 50); // petit délai
+        return () => clearTimeout(timeout);
+    }, [clips]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -34,10 +42,12 @@ export default function ClipsClient({
 
             {/* Grille des clips */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {clips.map((clip) => (
+                {clips.map((clip, index) => (
                     <div
                         key={clip.id}
-                        className="relative group cursor-pointer rounded-lg overflow-hidden shadow-lg"
+                        className={`relative group cursor-pointer rounded-lg overflow-hidden shadow-lg transition-transform duration-300
+                            ${animationTrigger ? 'clip-visible' : 'clip-hidden'}`}
+                        style={{ animationDelay: `${index * 110}ms` }}
                         onClick={() => setSelectedClip(clip)}
                     >
                         <img
@@ -93,14 +103,23 @@ export default function ClipsClient({
                 </div>
             )}
 
-            <style jsx global>{`
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                    }
+            <style jsx>{`
+                .clip-hidden {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                .clip-visible {
+                    animation: clipFadeIn 0.3s forwards;
+                }
+                @keyframes clipFadeIn {
                     to {
                         opacity: 1;
+                        transform: translateY(0);
                     }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
                 }
                 .animate-fadeIn {
                     animation: fadeIn 0.2s ease-out;
