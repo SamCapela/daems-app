@@ -40,6 +40,25 @@ export default function ClipsClient({
         <div>
             <h3 className="text-2xl font-semibold mb-4">{title}</h3>
 
+            {/* Pagination */}
+            <div className="flex justify-center items-center mt-6 space-x-4">
+                <button
+                    onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 bg-purple-500 text-white rounded disabled:opacity-50"
+                >
+                    Précédent
+                </button>
+                <span className="text-gray-300">Page {currentPage}</span>
+                <button
+                    onClick={() => onPageChange(currentPage + 1)}
+                    disabled={!hasMore}
+                    className="px-4 py-2 bg-purple-500 text-white rounded disabled:opacity-50"
+                >
+                    Suivant
+                </button>
+            </div>
+
             {/* Grille des clips */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {clips.map((clip, index) => (
@@ -63,24 +82,7 @@ export default function ClipsClient({
                 ))}
             </div>
 
-            {/* Pagination */}
-            <div className="flex justify-center items-center mt-6 space-x-4">
-                <button
-                    onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 bg-purple-500 text-white rounded disabled:opacity-50"
-                >
-                    Précédent
-                </button>
-                <span className="text-gray-300">Page {currentPage}</span>
-                <button
-                    onClick={() => onPageChange(currentPage + 1)}
-                    disabled={!hasMore}
-                    className="px-4 py-2 bg-purple-500 text-white rounded disabled:opacity-50"
-                >
-                    Suivant
-                </button>
-            </div>
+            
 
             {/* Overlay plein écran */}
             {selectedClip && (

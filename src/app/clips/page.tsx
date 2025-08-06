@@ -15,7 +15,7 @@ export default function Clips() {
     const [cursorMap, setCursorMap] = useState<{ [page: number]: string | undefined }>({});
     const [hasMore, setHasMore] = useState(true);
 
-    const clipsPerPage = 9;
+    const clipsPerPage = 15;
 
     const TWITCH_CLIENT_ID = process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID;
     const TWITCH_ACCESS_TOKEN = process.env.NEXT_PUBLIC_TWITCH_ACCESS_TOKEN;
