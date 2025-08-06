@@ -110,6 +110,7 @@ export default function ClipsClient({
                             height="500"
                             width="100%"
                             allowFullScreen
+                            allow="autoplay; fullscreen"
                             className="rounded-lg shadow-lg"
                         ></iframe>
                     </div>
