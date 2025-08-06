@@ -41,7 +41,7 @@ export default function ClipsClient({
             <h3 className="text-2xl font-semibold mb-4">{title}</h3>
 
             {/* Pagination */}
-            <div className="flex justify-center items-center mt-6 space-x-4 gap-6">
+            <div className="flex justify-center items-center mt-6 space-x-4 gap-6 mb-6">
                 <button
                     onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
                     disabled={currentPage === 1}
@@ -60,7 +60,7 @@ export default function ClipsClient({
             </div>
 
             {/* Grille des clips */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                 {clips.map((clip, index) => (
                     <div
                         key={clip.id}
@@ -81,8 +81,6 @@ export default function ClipsClient({
                     </div>
                 ))}
             </div>
-
-            
 
             {/* Overlay plein écran */}
             {selectedClip && (
