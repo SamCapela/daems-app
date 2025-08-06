@@ -12,10 +12,10 @@ export default function Home() {
                         Stream de Daems
                     </h1>
                     <div className="flex gap-4">
-                        <Link href="/" className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg shadow-md">
+                        <Link href="/" className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg shadow-md transition">
                             Accueil
                         </Link>
-                        <Link href="/clips" className="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-lg shadow-md">
+                        <Link href="/clips" className="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-lg shadow-md transition">
                             Clips
                         </Link>
                     </div>
@@ -24,7 +24,7 @@ export default function Home() {
 
             {/* Section vidéo */}
             <section className="w-full max-w-4xl px-4 my-8">
-                <div className="relative rounded-lg shadow-2xl overflow-hidden border-2 border-purple-500">
+                <div className="relative rounded-lg shadow-2xl overflow-hidden border-2 border-purple-600">
                     <iframe
                         src="https://player.twitch.tv/?channel=daems_&parent=daems-app.vercel.app&parent=www.daems-app.vercel.app"
                         height="480"
@@ -32,7 +32,7 @@ export default function Home() {
                         allowFullScreen
                         className="aspect-video"
                     />
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-600"></div>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-600 to-pink-600"></div>
                 </div>
             </section>
 

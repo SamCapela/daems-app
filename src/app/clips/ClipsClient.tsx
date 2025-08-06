@@ -30,14 +30,14 @@ export default function ClipsClient({
 
     return (
         <div>
-            <h3 className="text-2xl font-semibold mb-4">{title}</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-white">{title}</h3>
 
             {/* Grille des clips */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {clips.map((clip) => (
                     <div
                         key={clip.id}
-                        className="relative group cursor-pointer rounded-lg overflow-hidden shadow-lg"
+                        className="relative group cursor-pointer rounded-lg overflow-hidden shadow-lg border border-purple-600"
                         onClick={() => setSelectedClip(clip)}
                     >
                         <img
@@ -45,9 +45,9 @@ export default function ClipsClient({
                             alt={clip.title}
                             className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                         />
-                        <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
                             <h4 className="text-white font-bold text-lg truncate">{clip.title}</h4>
-                            <span className="text-gray-200 text-sm">{clip.view_count} vues</span>
+                            <span className="text-gray-300 text-sm">{clip.view_count} vues</span>
                         </div>
                     </div>
                 ))}
@@ -58,7 +58,7 @@ export default function ClipsClient({
                 <button
                     onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 bg-purple-500 text-white rounded disabled:opacity-50"
+                    className="px-4 py-2 bg-purple-600 text-white rounded disabled:opacity-50 hover:bg-purple-700 transition"
                 >
                     Précédent
                 </button>
@@ -66,7 +66,7 @@ export default function ClipsClient({
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={!hasMore}
-                    className="px-4 py-2 bg-purple-500 text-white rounded disabled:opacity-50"
+                    className="px-4 py-2 bg-purple-600 text-white rounded disabled:opacity-50 hover:bg-purple-700 transition"
                 >
                     Suivant
                 </button>
@@ -74,7 +74,7 @@ export default function ClipsClient({
 
             {/* Overlay plein écran */}
             {selectedClip && (
-                <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 animate-fadeIn">
+                <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 animate-fadeIn">
                     <div className="relative w-full max-w-4xl p-4">
                         <button
                             onClick={() => setSelectedClip(null)}

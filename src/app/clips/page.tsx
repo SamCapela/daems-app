@@ -68,7 +68,6 @@ export default function Clips() {
 
         const json = await response.json();
 
-        // Tri
         const sortFunctions = {
             views: (a: TwitchClip, b: TwitchClip) => b.view_count - a.view_count,
             recent: (a: TwitchClip, b: TwitchClip) =>
@@ -80,7 +79,6 @@ export default function Clips() {
         const sortedData = [...json.data].sort(sortFunctions[sortType]);
         setClips(sortedData);
 
-        // Gestion des curseurs de pagination
         if (json.pagination?.cursor) {
             setCursorMap((prev) => ({
                 ...prev,
@@ -100,33 +98,29 @@ export default function Clips() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col">
-            {/* Navbar */}
-            <header className="w-full bg-gray-900 shadow-md">
+        <div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-800 text-white flex flex-col">
+            <header className="w-full bg-blue-900 shadow-md">
                 <nav className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-                    <h1 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+                    <h1 className="text-4xl font-extrabold text-white">
                         Stream de Daems
                     </h1>
                     <div className="flex gap-4">
-                        <Link href="/" className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg shadow-md">
+                        <Link href="/" className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md">
                             Accueil
                         </Link>
-                        <Link href="/clips" className="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-lg shadow-md">
+                        <Link href="/clips" className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg shadow-md">
                             Clips
                         </Link>
                     </div>
                 </nav>
             </header>
 
-            {/* Contenu */}
             <main className="w-full max-w-6xl mx-auto px-4 my-8">
                 <h2 className="text-4xl font-extrabold mb-2">
                     Clips {category === 'week' ? 'de la semaine' : category === 'month' ? 'du mois' : 'globaux'}
                 </h2>
 
-                {/* Filtres */}
                 <div className="flex flex-col gap-4 items-start mb-8">
-                    {/* Catégories */}
                     <div className="flex gap-4">
                         {[
                             { key: 'week', label: 'Semaine' },
@@ -137,8 +131,8 @@ export default function Clips() {
                                 key={btn.key}
                                 onClick={() => setCategory(btn.key as 'week' | 'month' | 'global')}
                                 className={`px-6 py-2 rounded-lg font-semibold transition-colors ${category === btn.key
-                                        ? 'bg-purple-600 text-white'
-                                        : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-blue-500/40 hover:bg-blue-500/60 text-white/70'
                                     }`}
                             >
                                 {btn.label}
@@ -146,7 +140,6 @@ export default function Clips() {
                         ))}
                     </div>
 
-                    {/* Tri */}
                     <div className="flex gap-4">
                         {[
                             { key: 'views', label: 'Par vues' },
@@ -157,8 +150,8 @@ export default function Clips() {
                                 key={btn.key}
                                 onClick={() => setSortType(btn.key as 'views' | 'recent' | 'old')}
                                 className={`px-6 py-2 rounded-lg font-semibold transition-colors ${sortType === btn.key
-                                        ? 'bg-pink-600 text-white'
-                                        : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-blue-500/40 hover:bg-blue-500/60 text-white/70'
                                     }`}
                             >
                                 {btn.label}
@@ -168,7 +161,7 @@ export default function Clips() {
                 </div>
 
                 {loading ? (
-                    <p className="text-center text-gray-400">Chargement des clips...</p>
+                    <p className="text-center text-blue-200">Chargement des clips...</p>
                 ) : (
                     <ClipsClient
                         clips={clips}
