@@ -12,7 +12,7 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="flex gap-4 mb-8 justify-center bg-gray-900 p-4 rounded-lg shadow-lg">
+        <nav className="flex gap-4 mb-8 justify-center">
             {links.map(link => (
                 <Link
                     key={link.href}
