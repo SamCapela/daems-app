@@ -22,9 +22,10 @@ export default function Home() {
                 </nav>
             </header>
 
-            {/* Section vidéo */}
-            <section className="w-full max-w-4xl px-4 my-8">
-                <div className="relative rounded-lg shadow-2xl overflow-hidden border-2 border-purple-500">
+            {/* Section vidéo avec player et chat côte à côte */}
+            <section className="w-full max-w-6xl px-4 my-8 flex gap-6 justify-center">
+                {/* Lecteur Twitch */}
+                <div className="flex-1 max-w-[720px] rounded-lg shadow-2xl overflow-hidden border-2 border-purple-500 relative">
                     <iframe
                         src="https://player.twitch.tv/?channel=daems_&parent=daems-app.vercel.app&parent=www.daems-app.vercel.app"
                         height="480"
@@ -34,13 +35,23 @@ export default function Home() {
                     />
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-600"></div>
                 </div>
+
+                {/* Chat Twitch */}
+                <div className="flex-1 max-w-[360px] rounded-lg shadow-2xl overflow-hidden border-2 border-pink-500">
+                    <iframe
+                        src="https://www.twitch.tv/embed/daems_/chat?parent=daems-app.vercel.app&parent=www.daems-app.vercel.app"
+                        height="480"
+                        width="100%"
+                        className="bg-black"
+                    />
+                </div>
             </section>
 
             {/* Footer */}
             <footer className="w-full py-6 bg-gray-900 text-center">
                 <p className="text-gray-400">
                     Suivez{' '}
-                    <a href="https://twitch.tv/daems_" className="text-purple-400 hover:underline">
+                    <a href="https://twitch.tv/daems_" className="text-purple-400 hover:underline" target="_blank" rel="noopener noreferrer">
                         Daems_
                     </a>{' '}
                     sur Twitch pour ne rien manquer !
