@@ -60,8 +60,8 @@ export default function ClipsClient({
             </div>
 
             {/* Grille des clips */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                {clips.map((clip, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                {clips.slice(0, 15).map((clip, index) => (
                     <div
                         key={clip.id}
                         className={`relative group cursor-pointer rounded-lg overflow-hidden shadow-lg transition-transform duration-300
