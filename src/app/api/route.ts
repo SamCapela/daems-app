@@ -18,9 +18,10 @@ export async function GET(req: NextRequest) {
     const clipsPerPage = 15;
     let clips: TwitchClip[] = [];
     let cursor: string | undefined;
+    let retryCount = 0;
     const maxRetries = 2;
 
-    const fetchToken = async (retryCount = 0): Promise<string> => {
+    const fetchToken = async (retryCount: number): Promise<string> => {
         try {
             console.log(`Fetching Twitch OAuth token (Attempt ${retryCount + 1})...`);
             const tokenResponse = await fetch(
@@ -73,7 +74,7 @@ export async function GET(req: NextRequest) {
         }
 
         // Fetch token with retry
-        const access_token = await fetchToken();
+        let access_token = await fetchToken(0);
 
         // Set time filters for week/month
         const now = new Date();
@@ -111,7 +112,8 @@ export async function GET(req: NextRequest) {
                 if (response.status === 401 && retryCount < maxRetries) {
                     console.log(`Retrying token fetch due to 401 error (${retryCount + 1}/${maxRetries})...`);
                     access_token = await fetchToken(retryCount + 1);
-                    continue; // Retry the clip fetch with the new token
+                    retryCount++;
+                    continue;
                 }
                 return NextResponse.json(
                     { error: `Twitch API error: ${errorText}` },
@@ -123,7 +125,7 @@ export async function GET(req: NextRequest) {
             console.log(`Received ${data.data.length} clips, cursor: ${data.pagination?.cursor || 'none'}`);
             clips = [...clips, ...data.data];
             cursor = category === 'global' ? data.pagination?.cursor : undefined;
-        } while (cursor && category === 'global'); // Fetch all pages for global
+        } while (cursor && category === 'global');
 
         // Sort clips
         const sortFunctions = {

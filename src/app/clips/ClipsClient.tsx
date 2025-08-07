@@ -39,7 +39,6 @@ export default function ClipsClient({
         <div>
             <h3 className="text-2xl font-semibold mb-4">{title}</h3>
 
-            {/* Pagination */}
             <div className="flex justify-center items-center mt-6 space-x-4 gap-6 mb-6">
                 <button
                     onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
@@ -58,7 +57,6 @@ export default function ClipsClient({
                 </button>
             </div>
 
-            {/* Grille des clips */}
             <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4">
                 {clips.map((clip, index) => (
                     <div
@@ -77,7 +75,6 @@ export default function ClipsClient({
                             <h4 className="text-white font-bold text-lg truncate">{clip.title}</h4>
                             <span className="text-gray-200 text-sm">{clip.view_count} vues</span>
                         </div>
-                        {/* Tooltip */}
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
                             <div className="bg-gray-800 text-white text-sm rounded-lg shadow-xl p-3 border border-purple-500 max-w-xs bg-gradient-to-r from-purple-600/50 to-pink-600/50">
                                 <p className="font-bold truncate">{clip.title}</p>
@@ -91,7 +88,6 @@ export default function ClipsClient({
                 ))}
             </div>
 
-            {/* Overlay plein écran */}
             {selectedClip && (
                 <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 animate-fadeIn">
                     <div className="relative w-full max-w-4xl p-4">

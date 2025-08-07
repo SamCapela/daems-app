@@ -66,7 +66,6 @@ export default function Clips() {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col">
-            {/* Navbar */}
             <header className="w-full bg-gray-900 shadow-md">
                 <nav className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
                     <h1 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
@@ -83,15 +82,12 @@ export default function Clips() {
                 </nav>
             </header>
 
-            {/* Contenu */}
             <main className="w-full max-w-6xl mx-auto px-4 my-8">
                 <h2 className="text-4xl font-extrabold mb-2">
                     Clips {category === 'week' ? 'de la semaine' : category === 'month' ? 'du mois' : 'globaux'}
                 </h2>
 
-                {/* Filtres */}
                 <div className="flex flex-col gap-4 items-start mb-8">
-                    {/* Catégories */}
                     <div className="flex gap-4">
                         {[
                             { key: 'week', label: 'Semaine' },
@@ -109,7 +105,6 @@ export default function Clips() {
                         ))}
                     </div>
 
-                    {/* Tri */}
                     <div className="flex gap-4">
                         {[
                             { key: 'views', label: 'Par vues' },
@@ -142,8 +137,3 @@ export default function Clips() {
                         hasMore={hasMore}
                         onPageChange={handlePageChange}
                     />
-                )}
-            </main>
-        </div>
-    );
-}
