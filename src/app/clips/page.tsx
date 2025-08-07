@@ -10,6 +10,7 @@ export default function Clips() {
     const [sortType, setSortType] = useState<'views' | 'recent' | 'old'>('views');
     const [clips, setClips] = useState<TwitchClip[]>([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
@@ -20,6 +21,7 @@ export default function Clips() {
 
     const fetchClips = async (page: number) => {
         setLoading(true);
+        setError(null);
         try {
             const url = new URL('/api/clips', window.location.origin);
             url.searchParams.append('category', category);
@@ -27,8 +29,19 @@ export default function Clips() {
             url.searchParams.append('page', page.toString());
 
             const response = await fetch(url, { cache: 'no-store' });
-            if (!response.ok) throw new Error('Failed to fetch clips');
-            const { clips: fetchedClips, hasMore: fetchedHasMore } = await response.json();
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to fetch clips');
+            }
+            const { clips: fetchedClips, hasMore: fetchedHasMore, error: apiError } = await response.json();
+
+            if (apiError) {
+                throw new Error(apiError);
+            }
+
+            if (fetchedClips.length === 0) {
+                setError('Aucun clip trouvé pour cette catégorie.');
+            }
 
             setClips(fetchedClips);
             setHasMore(fetchedHasMore);
@@ -36,6 +49,7 @@ export default function Clips() {
             console.error('Error fetching clips:', error);
             setClips([]);
             setHasMore(false);
+            setError(error instanceof Error ? error.message : 'Une erreur est survenue lors du chargement des clips.');
         } finally {
             setLoading(false);
         }
@@ -116,6 +130,10 @@ export default function Clips() {
 
                 {loading ? (
                     <p className="text-center text-gray-400">Chargement des clips...</p>
+                ) : error ? (
+                    <p className="text-center text-red-400">{error}</p>
+                ) : clips.length === 0 ? (
+                    <p className="text-center text-gray-400">Aucun clip disponible pour le moment.</p>
                 ) : (
                     <ClipsClient
                         clips={clips}
