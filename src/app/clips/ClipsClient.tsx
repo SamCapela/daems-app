@@ -64,7 +64,7 @@ export default function ClipsClient({
                     <div
                         key={clip.id}
                         className={`relative group cursor-pointer rounded-lg overflow-hidden shadow-lg transition-transform duration-300
-                            ${animationTrigger ? 'clip-visible' : 'clip-hidden'}`}
+              ${animationTrigger ? 'clip-visible' : 'clip-hidden'}`}
                         style={{ animationDelay: `${index * 222}ms` }}
                         onClick={() => setSelectedClip(clip)}
                     >
@@ -114,27 +114,27 @@ export default function ClipsClient({
             )}
 
             <style jsx>{`
-                .clip-hidden {
-                    opacity: 0;
-                    transform: translateY(10px);
-                }
-                .clip-visible {
-                    animation: clipFadeIn 0.4s forwards;
-                }
-                @keyframes clipFadeIn {
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-                .animate-fadeIn {
-                    animation: fadeIn 0.2s ease-out;
-                }
-            `}</style>
+        .clip-hidden {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        .clip-visible {
+          animation: clipFadeIn 0.4s forwards;
+        }
+        @keyframes clipFadeIn {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+      `}</style>
         </div>
     );
 }

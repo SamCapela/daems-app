@@ -101,9 +101,7 @@ export default function Clips() {
                             <button
                                 key={btn.key}
                                 onClick={() => setCategory(btn.key as 'week' | 'month' | 'global')}
-                                className={`px-6 py-2 rounded-lg font-semibold transition-colors ${category === btn.key
-                                    ? 'bg-purple-600 text-white'
-                                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                className={`px-6 py-2 rounded-lg font-semibold transition-colors ${category === btn.key ? 'bg-purple-600 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
                                     }`}
                             >
                                 {btn.label}
@@ -121,9 +119,7 @@ export default function Clips() {
                             <button
                                 key={btn.key}
                                 onClick={() => setSortType(btn.key as 'views' | 'recent' | 'old')}
-                                className={`px-6 py-2 rounded-lg font-semibold transition-colors ${sortType === btn.key
-                                    ? 'bg-pink-600 text-white'
-                                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                className={`px-6 py-2 rounded-lg font-semibold transition-colors ${sortType === btn.key ? 'bg-pink-600 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
                                     }`}
                             >
                                 {btn.label}

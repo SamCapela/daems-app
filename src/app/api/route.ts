@@ -18,6 +18,49 @@ export async function GET(req: NextRequest) {
     const clipsPerPage = 15;
     let clips: TwitchClip[] = [];
     let cursor: string | undefined;
+    const maxRetries = 2;
+
+    const fetchToken = async (retryCount = 0): Promise<string> => {
+        try {
+            console.log(`Fetching Twitch OAuth token (Attempt ${retryCount + 1})...`);
+            const tokenResponse = await fetch(
+                `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`,
+                { method: 'POST', cache: 'no-store' }
+            );
+            if (!tokenResponse.ok) {
+                const errorText = await tokenResponse.text();
+                console.error('Failed to fetch Twitch token:', tokenResponse.status, errorText);
+                if (retryCount < maxRetries && tokenResponse.status === 401) {
+                    console.log(`Retrying token fetch (${retryCount + 1}/${maxRetries})...`);
+                    return fetchToken(retryCount + 1);
+                }
+                throw new Error(`Failed to fetch Twitch token: ${errorText}`);
+            }
+            const { access_token } = await tokenResponse.json();
+            console.log('Twitch token fetched successfully');
+
+            // Validate token
+            console.log('Validating Twitch token...');
+            const validateResponse = await fetch('https://id.twitch.tv/oauth2/validate', {
+                headers: { Authorization: `Bearer ${access_token}` },
+                cache: 'no-store',
+            });
+            if (!validateResponse.ok) {
+                const validateError = await validateResponse.text();
+                console.error('Token validation failed:', validateResponse.status, validateError);
+                if (retryCount < maxRetries && validateResponse.status === 401) {
+                    console.log(`Retrying token fetch (${retryCount + 1}/${maxRetries})...`);
+                    return fetchToken(retryCount + 1);
+                }
+                throw new Error(`Invalid Twitch token: ${validateError}`);
+            }
+            console.log('Twitch token validated successfully');
+            return access_token;
+        } catch (error) {
+            console.error('Error fetching or validating token:', error);
+            throw error;
+        }
+    };
 
     try {
         // Validate environment variables
@@ -29,38 +72,8 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        // Fetch Twitch OAuth token
-        console.log('Fetching Twitch OAuth token...');
-        const tokenResponse = await fetch(
-            `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`,
-            { method: 'POST', cache: 'no-store' }
-        );
-        if (!tokenResponse.ok) {
-            const errorText = await tokenResponse.text();
-            console.error('Failed to fetch Twitch token:', tokenResponse.status, errorText);
-            return NextResponse.json(
-                { error: `Failed to fetch Twitch token: ${errorText}` },
-                { status: tokenResponse.status }
-            );
-        }
-        const { access_token } = await tokenResponse.json();
-        console.log('Twitch token fetched successfully');
-
-        // Validate token
-        console.log('Validating Twitch token...');
-        const validateResponse = await fetch('https://id.twitch.tv/oauth2/validate', {
-            headers: { Authorization: `Bearer ${access_token}` },
-            cache: 'no-store',
-        });
-        if (!validateResponse.ok) {
-            const validateError = await validateResponse.text();
-            console.error('Token validation failed:', validateResponse.status, validateError);
-            return NextResponse.json(
-                { error: `Invalid Twitch token: ${validateError}` },
-                { status: validateResponse.status }
-            );
-        }
-        console.log('Twitch token validated successfully');
+        // Fetch token with retry
+        const access_token = await fetchToken();
 
         // Set time filters for week/month
         const now = new Date();
@@ -95,6 +108,11 @@ export async function GET(req: NextRequest) {
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error('Twitch API error:', response.status, errorText);
+                if (response.status === 401 && retryCount < maxRetries) {
+                    console.log(`Retrying token fetch due to 401 error (${retryCount + 1}/${maxRetries})...`);
+                    access_token = await fetchToken(retryCount + 1);
+                    continue; // Retry the clip fetch with the new token
+                }
                 return NextResponse.json(
                     { error: `Twitch API error: ${errorText}` },
                     { status: response.status }
