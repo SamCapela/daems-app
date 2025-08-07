@@ -38,10 +38,29 @@ export async function GET(req: NextRequest) {
         if (!tokenResponse.ok) {
             const errorText = await tokenResponse.text();
             console.error('Failed to fetch Twitch token:', tokenResponse.status, errorText);
-            throw new Error(`Failed to fetch Twitch token: ${tokenResponse.status}`);
+            return NextResponse.json(
+                { error: `Failed to fetch Twitch token: ${errorText}` },
+                { status: tokenResponse.status }
+            );
         }
         const { access_token } = await tokenResponse.json();
         console.log('Twitch token fetched successfully');
+
+        // Validate token
+        console.log('Validating Twitch token...');
+        const validateResponse = await fetch('https://id.twitch.tv/oauth2/validate', {
+            headers: { Authorization: `Bearer ${access_token}` },
+            cache: 'no-store',
+        });
+        if (!validateResponse.ok) {
+            const validateError = await validateResponse.text();
+            console.error('Token validation failed:', validateResponse.status, validateError);
+            return NextResponse.json(
+                { error: `Invalid Twitch token: ${validateError}` },
+                { status: validateResponse.status }
+            );
+        }
+        console.log('Twitch token validated successfully');
 
         // Set time filters for week/month
         const now = new Date();
@@ -76,7 +95,10 @@ export async function GET(req: NextRequest) {
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error('Twitch API error:', response.status, errorText);
-                throw new Error(`Twitch API error: ${response.status}`);
+                return NextResponse.json(
+                    { error: `Twitch API error: ${errorText}` },
+                    { status: response.status }
+                );
             }
 
             const data = await response.json();
@@ -102,6 +124,9 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ clips: paginatedClips, hasMore });
     } catch (error) {
         console.error('Error fetching clips:', error);
-        return NextResponse.json({ clips: [], hasMore: false, error: String(error) }, { status: 500 });
+        return NextResponse.json(
+            { clips: [], hasMore: false, error: error instanceof Error ? error.message : 'Unknown error' },
+            { status: 500 }
+        );
     }
 }

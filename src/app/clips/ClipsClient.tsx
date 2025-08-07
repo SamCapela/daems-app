@@ -102,7 +102,7 @@ export default function ClipsClient({
                             &times;
                         </button>
                         <iframe
-                            src={`https://clips.twitch.tv/embed?clip=${selectedClip.id}&parent=${window.location.hostname}&autoplay=true&muted=false`}
+                            src={`https://clips.twitch.tv/embed?clip=${selectedClip.id}&parent=daems-app.vercel.app&autoplay=true&muted=false`}
                             height="500"
                             width="100%"
                             allowFullScreen

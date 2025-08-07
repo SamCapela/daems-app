@@ -28,28 +28,32 @@ export default function Clips() {
             url.searchParams.append('sortType', sortType);
             url.searchParams.append('page', page.toString());
 
+            console.log(`Fetching clips from ${url.toString()}`);
             const response = await fetch(url, { cache: 'no-store' });
             if (!response.ok) {
                 const errorData = await response.json();
+                console.error('API error response:', errorData);
                 throw new Error(errorData.error || 'Failed to fetch clips');
             }
             const { clips: fetchedClips, hasMore: fetchedHasMore, error: apiError } = await response.json();
 
             if (apiError) {
+                console.error('API returned error:', apiError);
                 throw new Error(apiError);
             }
 
             if (fetchedClips.length === 0) {
-                setError('Aucun clip trouvé pour cette catégorie.');
+                setError('Aucun clip trouvé pour cette catégorie. Vérifiez si des clips existent sur le channel Twitch.');
             }
 
             setClips(fetchedClips);
             setHasMore(fetchedHasMore);
         } catch (error) {
-            console.error('Error fetching clips:', error);
+            const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors du chargement des clips.';
+            console.error('Error fetching clips:', errorMessage);
             setClips([]);
             setHasMore(false);
-            setError(error instanceof Error ? error.message : 'Une erreur est survenue lors du chargement des clips.');
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
